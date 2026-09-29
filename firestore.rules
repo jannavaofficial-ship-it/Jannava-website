@@ -1,0 +1,76 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default-deny catch-all (Pillar 4 / Global Safety Net)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Hardened Helper Primitives
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Admin authorization rule: verified email check + admin collection fallback
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'jannavaofficial@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // Health check endpoint for connection verification
+    match /test/connection {
+      allow get: if true;
+    }
+
+    // 1. Activities (Kegiatan)
+    match /activities/{activityId} {
+      allow get, list: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isAdmin() && isValidId(activityId);
+    }
+
+    // 2. Programs (Pilar Program Utama)
+    match /programs/{programId} {
+      allow get, list: if resource.data.published == true || isAdmin();
+      allow create, update, delete: if isAdmin() && isValidId(programId);
+    }
+
+    // 3. Organization Members (Susunan Pengurus)
+    match /organization/{memberId} {
+      allow get, list: if resource.data.active == true || isAdmin();
+      allow create, update, delete: if isAdmin() && isValidId(memberId);
+    }
+
+    // 4. Gallery (Dokumentasi)
+    match /gallery/{imageId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin() && isValidId(imageId);
+    }
+
+    // 5. Inquiries (Pesan Masuk & Kontak)
+    match /inquiries/{inquiryId} {
+      allow create: if request.resource.data.name is string &&
+                       request.resource.data.email is string &&
+                       request.resource.data.message is string;
+      allow get, list, update, delete: if isAdmin() && isValidId(inquiryId);
+    }
+
+    // 6. Site Settings (Konfigurasi Publik)
+    match /siteSettings/{settingId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin() && isValidId(settingId);
+    }
+
+    // 7. Admins Collection
+    match /admins/{adminId} {
+      allow get: if isSignedIn() && (request.auth.uid == adminId || isAdmin());
+      allow list, write: if isAdmin() && isValidId(adminId);
+    }
+  }
+}

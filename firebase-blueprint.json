@@ -1,0 +1,144 @@
+{
+  "entities": {
+    "Activity": {
+      "title": "Activity",
+      "description": "Kegiatan dan agenda dakwah, sosial, pendidikan, atau olahraga pemuda JANNAVA",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "slug": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 50 },
+        "date": { "type": "string", "maxLength": 50 },
+        "description": { "type": "string", "maxLength": 1000 },
+        "content": { "type": "string", "maxLength": 10000 },
+        "coverImage": { "type": "string", "maxLength": 1000 },
+        "images": { "type": "string" },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "createdBy": { "type": "string", "maxLength": 100 }
+      },
+      "required": ["id", "title", "category", "published"]
+    },
+    "Program": {
+      "title": "Program",
+      "description": "Pilar program utama pembinaan dan pergerakan JANNAVA",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 100 },
+        "description": { "type": "string", "maxLength": 2000 },
+        "icon": { "type": "string", "maxLength": 50 },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "category", "published"]
+    },
+    "OrganizationMember": {
+      "title": "OrganizationMember",
+      "description": "Susunan kepengurusan BPH dan personil bidang organisasi",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 150 },
+        "position": { "type": "string", "maxLength": 150 },
+        "department": { "type": "string", "maxLength": 100 },
+        "role": { "type": "string", "maxLength": 100 },
+        "photo": { "type": "string", "maxLength": 1000 },
+        "order": { "type": "number" },
+        "active": { "type": "boolean" }
+      },
+      "required": ["id", "name", "position", "active"]
+    },
+    "GalleryItem": {
+      "title": "GalleryItem",
+      "description": "Dokumentasi arsip foto kegiatan JANNAVA",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string", "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 50 },
+        "date": { "type": "string", "maxLength": 50 },
+        "imageUrl": { "type": "string", "maxLength": 1000 },
+        "caption": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "imageUrl"]
+    },
+    "Inquiry": {
+      "title": "Inquiry",
+      "description": "Pesan silaturahmi atau aspirasi kontak dari pengunjung",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 150 },
+        "email": { "type": "string", "maxLength": 150 },
+        "subject": { "type": "string", "maxLength": 200 },
+        "message": { "type": "string", "maxLength": 2000 },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "email", "message"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "description": "Pengaturan informasi umum organisasi, kontak, dan alamat",
+      "type": "object",
+      "properties": {
+        "siteName": { "type": "string", "maxLength": 150 },
+        "tagline": { "type": "string", "maxLength": 200 },
+        "email": { "type": "string", "maxLength": 150 },
+        "address": { "type": "string", "maxLength": 500 },
+        "instagram": { "type": "string", "maxLength": 100 },
+        "whatsapp": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["siteName", "email"]
+    },
+    "Admin": {
+      "title": "Admin",
+      "description": "Daftar akun pengurus terverifikasi dengan akses pengelola",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string", "maxLength": 150 },
+        "role": { "type": "string", "maxLength": 50 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "email", "role"]
+    }
+  },
+  "firestore": {
+    "/activities/{activityId}": {
+      "schema": "Activity",
+      "description": "Koleksi publik dan arsip kegiatan pemuda JANNAVA"
+    },
+    "/programs/{programId}": {
+      "schema": "Program",
+      "description": "Koleksi program kerja dan bidang pergerakan"
+    },
+    "/organization/{memberId}": {
+      "schema": "OrganizationMember",
+      "description": "Koleksi data susunan pengurus organisasi"
+    },
+    "/gallery/{imageId}": {
+      "schema": "GalleryItem",
+      "description": "Koleksi foto dokumentasi kegiatan"
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": "Inquiry",
+      "description": "Koleksi pesan masuk dan kontak dari publik"
+    },
+    "/siteSettings/{settingId}": {
+      "schema": "SiteSettings",
+      "description": "Dokumen konfigurasi dan data kontak website"
+    },
+    "/admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Koleksi hak akses administrator pengurus JANNAVA"
+    }
+  }
+}

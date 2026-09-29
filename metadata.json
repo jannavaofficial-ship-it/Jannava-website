@@ -1,0 +1,6 @@
+{
+  "name": "JANNAVA | Islamic Youth Organization",
+  "description": "Website resmi organisasi pemuda Islam JANNAVA - Remaja Masjid Miftahul Jannah, Meruyung, Limo, Kota Depok. Berpegang pada Nilai, Bergerak dalam Kebaikan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
